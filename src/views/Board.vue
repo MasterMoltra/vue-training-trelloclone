@@ -3,27 +3,21 @@
     <div class="flex flex-row items-start">
       <div class="column flex">
         <input
+          type="text"
           class="p-2 mr-2 flex-grow"
-          placeholder="New column name"
+          placeholder="New Column Name"
           v-model="newColumnName"
           @keyup.enter="createColumn"
         />
       </div>
 
       <BoardColumn
-        v-for="(column, columnIndex) of board.columns"
-        :key="columnIndex"
+        v-for="(column, $columnIndex) of board.columns"
+        :key="$columnIndex"
         :column="column"
-        :columnIndex="columnIndex"
-      >
-        <input
-          slot="newTask"
-          type="text"
-          class="block p-2 w-full bg-transparent"
-          placeholder="+ Enter a New Task"
-          @keyup.enter="createTask($event, column.tasks)"
-        />
-      </BoardColumn>
+        :columnIndex="$columnIndex"
+        :board="board"
+      />
     </div>
 
     <div class="task-bg" v-if="isTaskOpen" @click.self="close">
@@ -34,12 +28,10 @@
 
 <script>
 import { mapState } from "vuex";
-import BoardColumn from "@/components/BoardColumn.vue";
+import BoardColumn from "@/components/BoardColumn";
 
 export default {
-  components: {
-    BoardColumn
-  },
+  components: { BoardColumn },
   data() {
     return {
       newColumnName: ""
@@ -55,14 +47,6 @@ export default {
     close() {
       this.$router.push({ name: "board" });
     },
-    createTask(e, tasks) {
-      this.$store.commit("CREATE_TASK", {
-        tasks,
-        name: e.target.value
-      });
-
-      e.target.value = "";
-    },
     createColumn() {
       this.$store.commit("CREATE_COLUMN", {
         name: this.newColumnName
@@ -74,19 +58,9 @@ export default {
 </script>
 
 <style lang="css">
-.task {
-  @apply flex items-center flex-wrap shadow mb-2 py-2 px-2 rounded bg-white text-grey-darkest no-underline;
-}
-
-.column {
-  @apply bg-grey-light p-2 mr-4 text-left shadow rounded;
-  min-width: 350px;
-}
-
 .board {
-  @apply p-4 bg-teal-dark h-full overflow-auto;
+  @apply p-4 bg-blue h-full overflow-auto;
 }
-
 .task-bg {
   @apply pin absolute;
   background: rgba(0,0,0,0.5);

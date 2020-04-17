@@ -17,8 +17,7 @@ export default new Vuex.Store({
       return id => {
         for (const column of state.board.columns) {
           for (const task of column.tasks) {
-            if (task.id == id) {
-              console.log("okkkkk", task.id);
+            if (task.id === id) {
               return task;
             }
           }
@@ -28,30 +27,28 @@ export default new Vuex.Store({
   },
   mutations: {
     CREATE_TASK(state, { tasks, name }) {
-      tasks.push({
-        name: name,
+      tasks.unshift({
+        name,
         id: uuid(),
-        userAssigned: null,
         description: ""
       });
     },
     CREATE_COLUMN(state, { name }) {
       state.board.columns.unshift({
-        name: name,
+        name,
         tasks: []
       });
     },
     UPDATE_TASK(state, { task, key, value }) {
       task[key] = value;
-      // Vue.set(task, key, value);
     },
-    // now also accepts `targetIndex`
     MOVE_TASK(state, { fromTasks, toTasks, fromTaskIndex, toTaskIndex }) {
       const taskToMove = fromTasks.splice(fromTaskIndex, 1)[0];
       toTasks.splice(toTaskIndex, 0, taskToMove);
     },
     MOVE_COLUMN(state, { fromColumnIndex, toColumnIndex }) {
       const columnList = state.board.columns;
+
       const columnToMove = columnList.splice(fromColumnIndex, 1)[0];
       columnList.splice(toColumnIndex, 0, columnToMove);
     }
